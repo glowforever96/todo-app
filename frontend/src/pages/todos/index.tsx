@@ -1,18 +1,31 @@
 import TodoList from "@/components/todo-list";
-import { useEffect } from "react";
-import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
+
+import { getTodos } from "@/api/todo";
+import { useAuth } from "@/store/auth-context";
+
+export interface Todo {
+  id: number;
+  username: string;
+  description: string;
+  targetDate: string;
+  isDone: boolean;
+}
 
 export default function TodoPage() {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const { username } = useAuth();
+
+  const fetchTodos = useCallback(async () => {
+    if (username) {
+      const todos = await getTodos(username);
+      setTodos(todos);
+    }
+  }, [username]);
+
   useEffect(() => {
-    const getTodos = async () => {
-      try {
-        const res = await axios.get("http://localhost:8080/todos");
-        console.log(res.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getTodos();
-  }, []);
-  return <TodoList />;
+    fetchTodos();
+  }, [fetchTodos]);
+
+  return <TodoList todos={todos} refreshTodos={fetchTodos} />;
 }

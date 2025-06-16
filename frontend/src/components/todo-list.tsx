@@ -1,3 +1,4 @@
+import type { Todo } from "@/pages/todos";
 import {
   Table,
   TableBody,
@@ -6,34 +7,65 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
+import { Button } from "./ui/button";
+import { deleteTodo } from "@/api/todo";
+import { useAuth } from "@/store/auth-context";
+import { useNavigate } from "react-router-dom";
 
-export default function TodoList() {
-  const today = new Date();
+export default function TodoList({
+  todos,
+  refreshTodos,
+}: {
+  todos: Todo[];
+  refreshTodos: () => Promise<void>;
+}) {
+  const { username } = useAuth();
+  const navigate = useNavigate();
 
-  const todos = [
-    { id: 1, description: "리액트 배우기", isDone: false, targetDate: today },
-    { id: 2, description: "스프링 배우기", isDone: false, targetDate: today },
-    { id: 3, description: "devOps 배우기", isDone: false, targetDate: today },
-    { id: 4, description: "그냥 배우기", isDone: false, targetDate: today },
-  ];
+  const handleClickDeleteButton = async (id: number) => {
+    await deleteTodo(username as string, id);
+    await refreshTodos();
+  };
+
+  const handleClickUpdateButton = (id: number) => {
+    navigate(`/todos/${id}`);
+  };
 
   return (
     <Table className="text-base ">
       <TableHeader>
         <TableRow className="text-md h-14">
-          <TableHead>ID</TableHead>
           <TableHead>할 일</TableHead>
           <TableHead>완료</TableHead>
           <TableHead>목표 날짜</TableHead>
+          <TableHead></TableHead>
+          <TableHead></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {todos.map(({ id, description, isDone, targetDate }) => (
+        {todos?.map(({ id, description, isDone, targetDate }) => (
           <TableRow key={id}>
-            <TableCell>{id}</TableCell>
             <TableCell>{description}</TableCell>
             <TableCell>{isDone ? "✅" : "❌"}</TableCell>
             <TableCell>{targetDate.toLocaleString()}</TableCell>
+            <TableCell>
+              <Button
+                className="cursor-pointer"
+                variant="secondary"
+                onClick={() => handleClickDeleteButton(id)}
+              >
+                삭제
+              </Button>
+            </TableCell>
+            <TableCell>
+              <Button
+                className="cursor-pointer"
+                variant="outline"
+                onClick={() => handleClickUpdateButton(id)}
+              >
+                수정
+              </Button>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

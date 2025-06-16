@@ -2,6 +2,7 @@ import { createContext, useContext, type RefObject } from "react";
 
 export type AuthContextType = {
   isAuth: boolean;
+  username: string | null;
   login: (id: string, password: string) => boolean;
   logout: () => void;
   isLogoutRef: RefObject<boolean>;
