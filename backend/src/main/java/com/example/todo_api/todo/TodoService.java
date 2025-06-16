@@ -16,9 +16,9 @@ public class TodoService {
 	static {
 		todos.add(new Todo(++todosCount, "kwon","Learn React",
 							LocalDate.now().plusYears(10), false ));
-		todos.add(new Todo(++todosCount, "yoon","Learn DevOps",
+		todos.add(new Todo(++todosCount, "kwon","Learn DevOps",
 				LocalDate.now().plusYears(11), false ));
-		todos.add(new Todo(++todosCount, "kim","Learn Full Stack Development",
+		todos.add(new Todo(++todosCount, "kwon","Learn Full Stack Development",
 				LocalDate.now().plusYears(12), false ));
 	}
 	
@@ -28,9 +28,6 @@ public class TodoService {
 		return todos.stream().filter(predicate).toList();
 	}
 
-	public List<Todo> retrieveAllTodo() {
-		return todos;
-	}
 	
 	public Todo addTodo(String username, String description, LocalDate targetDate, boolean done) {
 		Todo todo = new Todo(++todosCount,username,description,targetDate,done);
