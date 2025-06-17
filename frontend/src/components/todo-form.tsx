@@ -108,6 +108,8 @@ export default function TodoForm({
                     mode="single"
                     selected={field.value}
                     onSelect={field.onChange}
+                    startMonth={new Date(new Date().getFullYear(), 0)}
+                    endMonth={new Date(2099, 12)}
                     disabled={{
                       before: new Date(),
                     }}

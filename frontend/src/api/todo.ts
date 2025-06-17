@@ -61,5 +61,16 @@ export const addTodo = async ({
     return res.data;
   } catch (err) {
     console.error(err);
+    throw err;
+  }
+};
+
+export const updateDone = async (username: string, id: number) => {
+  try {
+    const res = await api.patch(`/users/${username}/todos/${id}/done`);
+    return res.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
 };

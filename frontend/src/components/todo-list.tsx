@@ -15,9 +15,11 @@ import { useNavigate } from "react-router-dom";
 export default function TodoList({
   todos,
   refreshTodos,
+  toggleDone,
 }: {
   todos: Todo[];
   refreshTodos: () => Promise<void>;
+  toggleDone: (todoId: number) => void;
 }) {
   const { username } = useAuth();
   const navigate = useNavigate();
@@ -47,7 +49,15 @@ export default function TodoList({
           {todos?.map(({ id, description, done, targetDate }) => (
             <TableRow key={id}>
               <TableCell>{description}</TableCell>
-              <TableCell>{done ? "✅" : "❌"}</TableCell>
+              <TableCell>
+                <Button
+                  variant="ghost"
+                  className="cursor-pointer"
+                  onClick={() => toggleDone(id!)}
+                >
+                  {done ? "✅" : "❌"}
+                </Button>
+              </TableCell>
               <TableCell>{targetDate.toLocaleString()}</TableCell>
               <TableCell>
                 <Button
