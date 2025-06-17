@@ -41,5 +41,12 @@ public class TodoResource {
         Todo createdTodo = todoService.addTodo(username, todo.getDescription(), todo.getTargetDate(), todo.isDone());
         return createdTodo;
     }
+    @PatchMapping("/users/{username}/todos/{id}/done")
+    public Todo toggleTodoDone(@PathVariable String username, @PathVariable int id) {
+        Todo todo = todoService.findById(id);
+        todo.setDone(!todo.isDone());
+        todoService.updateTodo(todo);
+        return todo;
+    }
 
 }

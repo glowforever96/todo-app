@@ -6,7 +6,7 @@ export default function PageLayout() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-1 flex items-center justify-center px-4">
-        <div className="w-full max-w-2xl">
+        <div className="w-full max-w-3xl">
           <Outlet />
         </div>
       </main>
