@@ -5,11 +5,11 @@ import { getTodos } from "@/api/todo";
 import { useAuth } from "@/store/auth-context";
 
 export interface Todo {
-  id: number;
+  id?: number;
   username: string;
   description: string;
   targetDate: string;
-  isDone: boolean;
+  done: boolean;
 }
 
 export default function TodoPage() {

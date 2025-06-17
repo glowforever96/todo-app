@@ -13,6 +13,7 @@ import { useAuth } from "./store/auth-context.ts";
 import { Toaster } from "./components/ui/sonner.tsx";
 import { toast } from "sonner";
 import TodoDetailPage from "./pages/todoDetail/index.tsx";
+import TodoNewPage from "./pages/todoNew/index.tsx";
 
 const AuthRoute = () => {
   const { isAuth, isLogoutRef } = useAuth();
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
         element: <AuthRoute />,
         children: [
           { path: "todos", element: <TodoPage /> },
+          { path: "todos/new", element: <TodoNewPage /> },
           { path: "todos/:id", element: <TodoDetailPage /> },
         ],
       },
