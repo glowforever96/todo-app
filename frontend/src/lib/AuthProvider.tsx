@@ -1,6 +1,7 @@
-import { basicAuth } from "@/api/auth";
+import { jwtAuth } from "@/api/auth";
 import { AuthContext } from "@/store/auth-context";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { parseJwt } from "./parseJwt";
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuth, setIsAuth] = useState(false);
@@ -9,14 +10,14 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const isLogoutRef = useRef(false);
 
   const login = async (id: string, password: string) => {
-    const baToken = "Basic " + window.btoa(id + ":" + password);
-    const res = await basicAuth(baToken);
+    const res = await jwtAuth(id, password);
     if (res.status === 200) {
       isLogoutRef.current = false;
       setUsername(id);
       setIsAuth(true);
-      localStorage.setItem("accessToken", baToken);
-      localStorage.setItem("user", id);
+      const jwt = `Bearer ${res.data.token}`;
+      localStorage.setItem("accessToken", jwt);
+
       return true;
     }
     setIsAuth(false);
@@ -28,28 +29,16 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     isLogoutRef.current = true;
     setIsAuth(false);
     localStorage.removeItem("accessToken");
-    localStorage.removeItem("user");
   };
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem("accessToken");
-      const user = localStorage.getItem("user");
-      if (token && user) {
-        const res = await basicAuth(token);
-        if (res.status === 200) {
-          setIsAuth(true);
-          setUsername(user);
-        } else {
-          setIsAuth(false);
-          setUsername(null);
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("user");
-        }
-      }
-      setIsLoading(false);
-    };
-    checkAuth();
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      const payload = parseJwt(token);
+      setUsername(payload.sub);
+      setIsAuth(true);
+    }
+    setIsLoading(false);
   }, []);
 
   return (

@@ -23,7 +23,7 @@ export default function TodoDetailPage() {
         username,
         description,
         targetDate: format(targetDate, "yyyy-MM-dd"),
-        done: false,
+        done: todoDetail!.done,
       };
       const isUpdated = await updateTodo({
         id: Number(id),
