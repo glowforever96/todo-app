@@ -16,7 +16,9 @@ import TodoDetailPage from "./pages/todoDetail/index.tsx";
 import TodoNewPage from "./pages/todoNew/index.tsx";
 
 const AuthRoute = () => {
-  const { isAuth, isLogoutRef } = useAuth();
+  const { isAuth, isLogoutRef, isLoading } = useAuth();
+  if (isLoading) return null;
+
   if (!isAuth) {
     if (!isLogoutRef.current) {
       toast.warning("로그인이 필요합니다.");
@@ -27,13 +29,20 @@ const AuthRoute = () => {
   return isAuth ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
+const LoginRoute = () => {
+  const { isAuth, isLoading } = useAuth();
+  if (isLoading) return null;
+
+  return isAuth ? <Navigate to="/todos" replace /> : <LoginPage />;
+};
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <PageLayout />,
     children: [
-      { index: true, element: <LoginPage /> },
-      { path: "login", element: <LoginPage /> },
+      { index: true, element: <LoginRoute /> },
+      { path: "login", element: <LoginRoute /> },
       {
         element: <AuthRoute />,
         children: [

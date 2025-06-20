@@ -1,8 +1,12 @@
 import type { Todo } from "@/pages/todos";
-import axios from "axios";
+import { api } from ".";
 
-const api = axios.create({
-  baseURL: "http://localhost:8080",
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("accessToken");
+  if (token) {
+    config.headers.Authorization = token;
+  }
+  return config;
 });
 
 export const getTodos = async (username: string) => {

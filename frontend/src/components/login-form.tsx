@@ -31,9 +31,10 @@ export default function LoginForm() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof loginSchema>) => {
+  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     const { id, password } = values;
-    const isAuth = login(id, password);
+    const isAuth = await login(id, password);
+    console.log(isAuth);
     if (isAuth) {
       navigate("/todos");
     }
